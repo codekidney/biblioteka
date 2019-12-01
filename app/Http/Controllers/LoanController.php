@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Book;
-use App\Models\Isbn;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
+use App\Models\Loan;
 
-class BookController extends Controller
+class LoanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        $booksList = Book::all();
-        return view('books/list', ['booksList' => $booksList]);
+        $loansList = Loan::all();
+        return view('loans/list', compact('loansList'));
     }
 
     /**
@@ -24,20 +24,18 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $book = new Book();
-        $book->name              = 'Pan Tadeusz';
-        $book->year              = '2015';
-        $book->pages             = '123';
-        $book->price             = '12.99';
-        $book->publication_place = 'Kielce';
-        $book->save();
+        $hobbit = Book::where('name',"Hobbit")->first();
+        $loan = new Loan();
+        $loan->client       = 'Jan Kowalski, ul. Mokra 23/67 Warszawa, tel: 456 789 123';
+        $loan->loaned_on    = '2019-10-12';
+        $loan->estimated_on = '2019-11-12';
+//        $loan->book_id      = $hobbit->id;
+        $hobbit->loans()->save($loan);
+        $loan->save();
         
-        $isbn = new Isbn(['number'=>'783135451315', 'issued_by'=>'Wydawnictwo Znak', 'issued_on'=>'2015-05-12']);
-        $book->isbn()->save($isbn);
-        
-        return redirect()->back();
+        return redirect('books');
     }
 
     /**
@@ -59,8 +57,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = Book::find($id);
-        return view('books/show',compact('book'));
+        //
     }
 
     /**
@@ -94,8 +91,6 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $book = Book::find($id);
-        $book->delete();
-        return redirect()->back();
+        //
     }
 }

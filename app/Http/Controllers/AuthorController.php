@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Book;
-use App\Models\Isbn;
 
 use Illuminate\Http\Request;
+use App\Models\Author;
+use App\Models\Book;
 
-class BookController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        $booksList = Book::all();
-        return view('books/list', ['booksList' => $booksList]);
+        $authorsList = Author::all();
+        return view('authors/list', compact('authorsList'));
     }
 
     /**
@@ -24,20 +24,27 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $book = new Book();
-        $book->name              = 'Pan Tadeusz';
-        $book->year              = '2015';
-        $book->pages             = '123';
-        $book->price             = '12.99';
-        $book->publication_place = 'Kielce';
-        $book->save();
+        $author = new Author();
+        $author->lastname  = 'Adam';
+        $author->firstname = 'Mickiewicz';
+        $author->birthday  = '1910-10-02';
+        $author->genres    = 'poezja, dramat';
+        $author->save();
         
-        $isbn = new Isbn(['number'=>'783135451315', 'issued_by'=>'Wydawnictwo Znak', 'issued_on'=>'2015-05-12']);
-        $book->isbn()->save($isbn);
+        $author2 = new Author();
+        $author2->lastname  = 'Michał';
+        $author2->firstname = 'Więckiewicz';
+        $author2->birthday  = '1905-04-22';
+        $author2->genres    = 'komedia, dramat';
+        $author2->save();
         
-        return redirect()->back();
+        $book = Book::where('name', 'Pan Tadeusz')->first();
+        $book->authors()->attach($author);
+        $book->authors()->attach($author2);
+        
+        return redirect('books');
     }
 
     /**
@@ -59,8 +66,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = Book::find($id);
-        return view('books/show',compact('book'));
+        //
     }
 
     /**
@@ -94,8 +100,6 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $book = Book::find($id);
-        $book->delete();
-        return redirect()->back();
+        //
     }
 }
