@@ -15,6 +15,7 @@ Book list
                     <td>Miejsce</td>
                     <td>Strony</td>
                     <td>Cena</td>
+                    <td>Podgląd</td>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +26,9 @@ Book list
                     <td>{{$book->publication_place}}</td>
                     <td>{{$book->pages}}</td>
                     <td>{{$book->price}}</td>
+                    <td><a href="{{ url('books', [$book->id]) }}">Podgląd</a></td>
+                    <td><a href="{{ url('books', [$book->id, 'edit']) }}">Edytuj</a></td>
+                    <td><a href="{{ url('books', [$book->id, 'delete']) }}">Usuń</a></td>
                 </tr>
                 @endforeach
             </tbody>
@@ -32,5 +36,6 @@ Book list
     @else
         Brak rekordów!
     @endif
+    <a class="btn btn-sm btn-primary" href="{{ url('books', ['create'])}}">Dodaj nowy</a>
 </div>
 @endsection

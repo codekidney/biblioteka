@@ -23,9 +23,17 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $book = new Book();
+        $book->name              = 'Pan Tadeusz';
+        $book->year              = '2015';
+        $book->pages             = '123';
+        $book->price             = '12.99';
+        $book->publication_place = 'Kielce';
+        $book->save();
+        
+        return redirect()->back();
     }
 
     /**
@@ -47,7 +55,8 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        //
+        $book = Book::find($id);
+        return view('books/show',compact('book'));
     }
 
     /**
@@ -81,6 +90,8 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $book = Book::find($id);
+        $book->delete();
+        return redirect()->back();
     }
 }
