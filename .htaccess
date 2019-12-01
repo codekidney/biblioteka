@@ -1,0 +1,11 @@
+# -------------------------------------------------------------------------
+# Switch on PHP 7.3 
+# -------------------------------------------------------------------------
+# AddHandler application/x-httpd-php73 php
+
+# -------------------------------------------------------------------------
+# Hide public catalog from url / e.g. domain.local/public => domain.local  
+# -------------------------------------------------------------------------
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^public
+RewriteRule ^(.*)$ public/$1 [L]
