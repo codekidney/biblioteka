@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Isbn;
+use App\Repositories\BookRepository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,25 +15,29 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(BookRepository $bookRepo)
     {
-        $booksList = Book::all();
+        $booksList = $bookRepo->getAll();
         return view('books/list', ['booksList' => $booksList]);
     }
     
-    public function cheapest() {
-        $booksList = DB::table('books')->orderBy('price','asc')->limit(3)->get();
+    public function cheapest(BookRepository $bookRepo)
+    {
+        $booksList = $bookRepo->cheapest();
         return view('books/list', compact('booksList'));
     } 
     
-    public function longest() {
-        $booksList = DB::table('books')->orderBy('pages','desc')->limit(3)->get();
+    public function longest(BookRepository $bookRepo) 
+    {
+        $booksList = $bookRepo->longest();
         return view('books/list', compact('booksList'));
     } 
     
-    public function search(Request $request) {
+    public function search(Request $request, BookRepository $bookRepo) {
         $q = $request->input('q');
-        $booksList = DB::table('books')->where('name','like',"%".$q."%")->orderBy('name','asc')->get();
+        $booksList = $bookRepo->search($q);
+//        $booksList = DB::table('books')->where('name','like',"%".$q."%")->orderBy('name','asc')->get();
+//        $booksList = DB::table('books')->leftJoin('isbns', 'isbns.book_id', '=', 'books.id')->where('name','like',"%".$q."%")->select('books.*', 'isbns.*')->get();
         return view('books/list', compact('booksList'));
     } 
     
