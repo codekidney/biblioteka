@@ -15,7 +15,9 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        $authorsList = Author::all();
+//        $authorsList = Author::all();
+        // Eager loading
+        $authorsList = Author::with('books')->get();
         return view('authors/list', compact('authorsList'));
     }
 
